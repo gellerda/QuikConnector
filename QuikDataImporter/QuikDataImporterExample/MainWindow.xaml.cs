@@ -50,7 +50,7 @@ namespace QuikDataImporterExample
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         QuikCandlesSourceProvider quikCandlesSourceProvider = new QuikCandlesSourceProvider();
-        //---------------------------------------------------------------------------------------------------------------------
+
         public MainWindow()
         {
             InitializeComponent();

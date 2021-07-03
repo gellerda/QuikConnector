@@ -18,7 +18,7 @@ namespace QuikDataImporter
     public class QuikCandlesSourceProvider : ICandlesSourceProvider
     {
         public IList<ISecurityInfo> SecCatalog { get; private set; }
-        private Queue<ImporterMessage> importerMessagesToSend = new Queue<ImporterMessage>();
+        private readonly Queue<ImporterMessage> importerMessagesToSend = new Queue<ImporterMessage>();
         //---------------------------------------------------------------------------------------------------------------------------------
         public QuikCandlesSourceProvider()
         {
@@ -38,7 +38,7 @@ namespace QuikDataImporter
             get { return new List<TimeFrame>() { TimeFrame.M1, TimeFrame.M2, TimeFrame.M3, TimeFrame.M5, TimeFrame.M10, TimeFrame.M15, TimeFrame.M20, TimeFrame.M30, TimeFrame.H1, TimeFrame.H2, TimeFrame.H4, TimeFrame.Daily, TimeFrame.Weekly, TimeFrame.Monthly }; }
         }
         //---------------------------------------------------------------------------------------------------------------------------------
-        public void StartImport()
+        private void StartImport()
         {
             // Создаст, или подключится к уже созданной разделяемой памяти с заданным именем:
             memoryMappedFile_ImporterMessages = MemoryMappedFile.CreateOrOpen(MemoryMappedFileName_ImporterMessages, MemoryMappedFileSize_ImporterMessages, MemoryMappedFileAccess.ReadWrite);
@@ -128,7 +128,7 @@ namespace QuikDataImporter
             Debug.WriteLine("End of data exporting.");
         }
         //---------------------------------------------------------------------------------------------------------------------------------
-        public void StopImport()
+        private void StopImport()
         {
             IsImportRunning = false;
 
@@ -146,7 +146,7 @@ namespace QuikDataImporter
             throw new ArgumentException($"There is no security with SecID={secID} in SecCatalog.");
         }
         //---------------------------------------------------------------------------------------------------------------------------------
-        private Dictionary<string, QCandlesSource> candlesSourcesWithUserCounter = new Dictionary<string, QCandlesSource>(); //Ключ - строка в формате "classCode_secCode_quikTimeFrame", где "classCode_secCode"=ISecurityInfo.SecID
+        private Dictionary<string, QuikCandlesSource> candlesSourcesWithUserCounter = new Dictionary<string, QuikCandlesSource>(); //Ключ - строка в формате "classCode_secCode_quikTimeFrame", где "classCode_secCode"=ISecurityInfo.SecID
 
         public ICandlesSourceFromProvider GetCandlesSource(string secID, TimeFrame timeFrame)
         {
@@ -155,7 +155,7 @@ namespace QuikDataImporter
 
             if (!candlesSourcesWithUserCounter.ContainsKey(candlesSources_key))
             {
-                QCandlesSource candlesSourceWithUserCounter = new QCandlesSource(secID, timeFrame, EndCandlesSourceUsing);
+                QuikCandlesSource candlesSourceWithUserCounter = new QuikCandlesSource(secID, timeFrame, EndCandlesSourceUsing);
                 candlesSourcesWithUserCounter.Add(candlesSources_key, candlesSourceWithUserCounter);
 
                 ImporterMessage importerMessageToSend = new StartCandleExportImporterMessage(candlesSources_key);
@@ -167,7 +167,7 @@ namespace QuikDataImporter
                 return candlesSourcesWithUserCounter[candlesSources_key];
         }
 
-        public void EndCandlesSourceUsing(string candlesSources_key)
+        private void EndCandlesSourceUsing(string candlesSources_key)
         {
             if (!candlesSourcesWithUserCounter.ContainsKey(candlesSources_key))
                 throw new ArgumentException($"Candle collection with key={candlesSources_key} is not being used.");
@@ -178,39 +178,39 @@ namespace QuikDataImporter
             candlesSourcesWithUserCounter.Remove(candlesSources_key);
         }
         //---------------------------------------------------------------------------------------------------------------------------------
-        public void SendImporterMessage(ImporterMessage importerMessage)
+        private void SendImporterMessage(ImporterMessage importerMessage)
         {
             importerMessagesToSend.Enqueue(importerMessage);
         }
         //---------------------------------------------------------------------------------------------------------------------------------
-        public static readonly char ObjectsDelimiterSymbol = '*';
-        public static readonly char ParamsDelimiterSymbol = ';';
+        internal static readonly char ObjectsDelimiterSymbol = '*';
+        internal static readonly char ParamsDelimiterSymbol = ';';
         //---------------------------------------------------------------------------------------------------------------------------------
         // Разделяемая память.
 
-        public static readonly string MemoryMappedFileName_QuikData = "LuaFileMapping_QuikData"; // Имя для выделенной памяти
-        public static readonly string MemoryMappedFileName_ImporterMessages = "LuaFileMapping_ImporterMessages"; // Имя для выделенной памяти
+        private static readonly string MemoryMappedFileName_QuikData = "LuaFileMapping_QuikData"; // Имя для выделенной памяти
+        private static readonly string MemoryMappedFileName_ImporterMessages = "LuaFileMapping_ImporterMessages"; // Имя для выделенной памяти
 
-        MemoryMappedFile memoryMappedFile_QuikData;
-        MemoryMappedFile memoryMappedFile_ImporterMessages;
+        private MemoryMappedFile memoryMappedFile_QuikData;
+        private MemoryMappedFile memoryMappedFile_ImporterMessages;
 
-        public static readonly uint MemoryMappedFileSize_QuikData = 8000000; // DWORD in the C language
-        public static readonly uint MemoryMappedFileSize_ImporterMessages = 30000;
+        private static readonly uint MemoryMappedFileSize_QuikData = 8000000; // DWORD in the C language
+        private static readonly uint MemoryMappedFileSize_ImporterMessages = 30000;
         private char[] readQuikDataBuffer = new char[MemoryMappedFileSize_QuikData];
         //---------------------------------------------------------------------------------------------------------------------------------
         //Именованные Event с автосбросом для импорта/экспорта из Квика:
 
-        public static readonly string EventName_QuikDataHasBeenSent = "LuaEvent_QuikDataHasBeenSent";
-        public static readonly string EventName_QuikDataHasBeenReceived = "LuaEvent_QuikDataHasBeenReceived";
-        public static readonly string EventName_ImporterMessageHasBeenSent = "LuaEvent_ImporterMessageHasBeenSent";
-        public static readonly string EventName_ImporterMessageHasBeenReceived = "LuaEvent_ImporterMessageHasBeenReceived";
+        private static readonly string EventName_QuikDataHasBeenSent = "LuaEvent_QuikDataHasBeenSent";
+        private static readonly string EventName_QuikDataHasBeenReceived = "LuaEvent_QuikDataHasBeenReceived";
+        private static readonly string EventName_ImporterMessageHasBeenSent = "LuaEvent_ImporterMessageHasBeenSent";
+        private static readonly string EventName_ImporterMessageHasBeenReceived = "LuaEvent_ImporterMessageHasBeenReceived";
 
-        EventWaitHandle event_QuikDataHasBeenSent;
-        EventWaitHandle event_QuikDataHasBeenReceived;
-        EventWaitHandle event_ImporterMessageHasBeenSent;
-        EventWaitHandle event_ImporterMessageHasBeenReceived;
+        private EventWaitHandle event_QuikDataHasBeenSent;
+        private EventWaitHandle event_QuikDataHasBeenReceived;
+        private EventWaitHandle event_ImporterMessageHasBeenSent;
+        private EventWaitHandle event_ImporterMessageHasBeenReceived;
         //---------------------------------------------------------------------------------------------------------------------------------
-        public bool IsImportRunning { get; private set; }
+        private bool IsImportRunning { get; set; }
 
         private Thread importerMessagesThread;
         private Thread quikDataThread;

@@ -11,14 +11,14 @@ using System.Windows.Threading;
 
 namespace QuikDataImporter
 {
-    enum QuikDataCode : byte
+    internal enum QuikDataCode : byte
     {
         DataZero = 0,
         SecCatalog = 1,
         Candles = 2
     };
     //******************************************************************************************************************************************
-    public class QuikData
+    internal class QuikData
     {
         public readonly byte dataCode;
         public readonly string dataString;
@@ -49,7 +49,7 @@ namespace QuikDataImporter
             return newSecCatalog;
         }
         //---------------------------------------------------------------------------------------------------------------------------------
-        internal static void ProcessCandles(string dataString, Dictionary<string, QCandlesSource> candleCollections)
+        internal static void ProcessCandles(string dataString, Dictionary<string, QuikCandlesSource> candleCollections)
         {
             string[] candleStrings = dataString.Split(QuikCandlesSourceProvider.ObjectsDelimiterSymbol);
             for (int i = 0; i < candleStrings.Length; i++)
@@ -79,7 +79,7 @@ namespace QuikDataImporter
                 double.TryParse(candle_params[13], style, culture, out double V);
 
                 DateTime t = new DateTime(year, month, day, hour, minute, sec, ms);
-                Candle newCandle = new Candle(t, O, H, L, C, V);
+                QuikCandle newCandle = new QuikCandle(t, O, H, L, C, V);
 
                 string candleCollections_key = candle_params[0]; // Key для candleSources в формате "classCode_secCode_quikTimeFrame"
                 //int candleSourcesKey = QuikCandlesSourceProvider.CandleSourcesKey(secIndex, (QuikTimeFrame)timeFrame);
@@ -95,7 +95,7 @@ namespace QuikDataImporter
                     {
                         int dN = candleIndex - candleCollection.Count;
                         for (int j = 0; j < dN; j++)
-                            candleCollection.Add(new Candle(new DateTime(), 0, 0, 0, 0, 0));
+                            candleCollection.Add(new QuikCandle(new DateTime(), 0, 0, 0, 0, 0));
 
                         candleCollection.Add(newCandle);
                     }

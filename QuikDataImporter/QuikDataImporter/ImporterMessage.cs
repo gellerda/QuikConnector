@@ -7,7 +7,7 @@ using System.Diagnostics; // Debug.WriteLine("Error...");
 
 namespace QuikDataImporter
 {
-    enum ImporterMessageCode : byte
+    internal enum ImporterMessageCode : byte
     {
         MessageZero = 0,
         SendSecCatalog = 1,
@@ -16,7 +16,7 @@ namespace QuikDataImporter
         StopAllCandlesExport = 4
     }
     //******************************************************************************************************************************************
-    public abstract class ImporterMessage
+    internal abstract class ImporterMessage
     {
         public readonly byte MessageCode;
         public readonly string MessageParams;
@@ -28,7 +28,7 @@ namespace QuikDataImporter
         }
     }
     //******************************************************************************************************************************************
-    public class ZeroImporterMessage : ImporterMessage
+    internal class ZeroImporterMessage : ImporterMessage
     {
         public ZeroImporterMessage()
             : base((byte)ImporterMessageCode.MessageZero, "")
@@ -36,7 +36,7 @@ namespace QuikDataImporter
         }
     }
     //******************************************************************************************************************************************
-    public class SendSecCatalogImporterMessage : ImporterMessage
+    internal class SendSecCatalogImporterMessage : ImporterMessage
     {
         public SendSecCatalogImporterMessage()
             : base((byte)ImporterMessageCode.SendSecCatalog, "")
@@ -44,7 +44,7 @@ namespace QuikDataImporter
         }
     }
     //******************************************************************************************************************************************
-    public class StartCandleExportImporterMessage : ImporterMessage
+    internal class StartCandleExportImporterMessage : ImporterMessage
     {
         public StartCandleExportImporterMessage(IList<string> candlesSourceKeyList)  // candlesSourceKey := "classCode_secCode_quikTimeFrame"
             : base((byte)ImporterMessageCode.StartCandleExport, CreateMessageParams(candlesSourceKeyList))
@@ -65,7 +65,7 @@ namespace QuikDataImporter
         //--------------------------------------------------------------------------------------------------------------------------------
     }
     //******************************************************************************************************************************************
-    public class StopCandleExportImporterMessage : ImporterMessage
+    internal class StopCandleExportImporterMessage : ImporterMessage
     {
         public StopCandleExportImporterMessage(IList<string> candlesSourceKeyList)  // candlesSourceKey := "classCode_secCode_quikTimeFrame"
             : base((byte)ImporterMessageCode.StopCandleExport, CreateMessageParams(candlesSourceKeyList))

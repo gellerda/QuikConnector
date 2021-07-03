@@ -8,9 +8,9 @@ using FancyCandles;
 
 namespace QuikDataImporter
 {
-    internal class QCandlesSource : ObservableCollection<ICandle>, ICandlesSourceFromProvider, IResourceWithUserCounter
+    public class QuikCandlesSource : ObservableCollection<ICandle>, ICandlesSourceFromProvider, IResourceWithUserCounter
     {
-        internal QCandlesSource(string secID, TimeFrame timeFrame, Action<string> OnNoMoreUsersAction)
+        internal QuikCandlesSource(string secID, TimeFrame timeFrame, Action<string> OnNoMoreUsersAction)
         {
             UserCount = 0;
             this.secID = secID;

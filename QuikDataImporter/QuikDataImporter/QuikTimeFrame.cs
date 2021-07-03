@@ -7,7 +7,7 @@ using FancyCandles;
 
 namespace QuikDataImporter
 {
-    public enum QuikTimeFrame
+    internal enum QuikTimeFrame
     {
         INTERVAL_TICK = 0,
         INTERVAL_M1 = 1,
@@ -28,7 +28,7 @@ namespace QuikDataImporter
         INTERVAL_MN1 = 23200
     }
     //************************************************************************************************************************************
-    public static class ConvertToQuikTimeFrame
+    internal static class ConvertToQuikTimeFrame
     {
         public static QuikTimeFrame FromTimeFrame(FancyCandles.TimeFrame timeFrame)
         {
