@@ -16,16 +16,25 @@
 
 ## Getting started
 
-1. Откройте решение *"LuaFMConnector/LuaFMConnector.sln"*. Выставите конфигурацию и платформу решения: *"Release x86"* или *"Release x64"* в зависимости от версии Windows, которой вы пользуетесь. Выполните команду Rebuild для проекта *LuaFMConnector*. В папке *"LuaFMConnector"* появится папка *"x86\Release"* или *"x64\Release"* в которой вы найдете файл *LuaFMConnector.dll*. Скопируйте этот файл в корневой каталог вашего терминала Quik.
+1. Проект из данного репозитория ссылается на два других проекта: [FancyPrimitives](https://github.com/gellerda/FancyPrimitives) и [FancyCandles](https://github.com/gellerda/FancyCandles). Склонируйте репозитории этих двух проектов и данный репозиторий [QuikConnector](https://github.com/gellerda/QuikConnector) в одну папку. Т.е. в итоге у вас должна получиться следующая структура папок c репозиториями:
 
-2. Скопируйте файл *"QuikDataExporter/QuikDataExporter.lua"* в корневой каталог вашего терминала Quik.
+    *-SomeRootFolder*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*-FancyCandles*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*-FancyPrimitives*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*-QuikConnector*
 
-3. Откройте терминал Quik и запустите скрипт *"QuikDataExporter/QuikDataExporter.lua"*. Для этого выберите в меню терминала *"Сервисы/Lua скрипты.../Добавить"*, найдите и выберите файл скрипта, нажмите *"Запустить в Lua 5.3.5"*.  
+2. Откройте решение *"LuaFMConnector/LuaFMConnector.sln"*. Выставите конфигурацию и платформу решения: *"Release x86"* или *"Release x64"* в зависимости от версии Windows, которой вы пользуетесь. Выполните команду Rebuild для проекта *LuaFMConnector*. В папке *"LuaFMConnector"* появится папка *"x86\Release"* или *"x64\Release"* в которой вы найдете файл *LuaFMConnector.dll*. Скопируйте этот файл в корневой каталог вашего терминала Quik.
 
-4. Откройте решение *"QuikDataImporter/QuikDataImporter.sln"*. Запустите проект *QuikDataImporterExample*. Последовательность выполнения пунктов 3 и 4 не имеет значения.
+3. Скопируйте файл *"QuikDataExporter/QuikDataExporter.lua"* в корневой каталог вашего терминала Quik.
+
+4. Откройте терминал Quik и запустите скрипт *"QuikDataExporter/QuikDataExporter.lua"*. Для этого выберите в меню терминала *"Сервисы/Lua скрипты.../Добавить"*, найдите и выберите файл скрипта, нажмите *"Запустить в Lua 5.3.5"*.  
+
+5. Откройте решение *"QuikDataImporter/QuikDataImporter.sln"*. Запустите проект *QuikDataImporterExample*. Последовательность выполнения пунктов 3 и 4 не имеет значения.
 
 Поздравляем! Вы запустили тестовый проект. На экране должен появится свечной график, данные для которого получены из терминала Quik и обновляются в реальном времени. Через контекстное меню можете изменить финансовый инструмент и таймфрейм.
 ![коннектор Quik api](images/quikconnector_example.gif)
+
+Все что делает проект *QuikDataImporter* - это всего лишь реализует интерфейсы [FancyCandles.ICandlesSourceProvider](https://gellerda.github.io/FancyCandles/api/FancyCandles.ICandlesSourceProvider.html) и [FancyCandles.ICandle](https://gellerda.github.io/FancyCandles/api/FancyCandles.ICandle.html). А в проекте *QuikDataImporterExample* мы используем эти реализации совместно с контролом свечного графика [FancyCandles.CandleChart](https://gellerda.github.io/FancyCandles/api/FancyCandles.CandleChart.html) из библиотеки [FancyCandles](https://github.com/gellerda/FancyCandles).
 
 ## Документация FancyCandles
 Только что запущенный вами тестовый проект использует библиотеку биржевых графиков [FancyCandles](https://github.com/gellerda/FancyCandles), которая имеет прекрасную [документацию](https://gellerda.github.io/FancyCandles/) с разделом [Getting started](https://gellerda.github.io/FancyCandles/articles/creating_candlestick_chart.html).
